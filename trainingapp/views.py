@@ -15,7 +15,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import authenticate , login , logout
 from django.core.files.storage import FileSystemStorage
 from django.template.loader import get_template
-from xhtml2pdf import pisa
+#from xhtml2pdf import pisa
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
@@ -2371,28 +2371,38 @@ def Admin_givetask(request):
     mem = User.objects.all()
     z = designation.objects.get(designation_name='Admin')
     var = user_registration.objects.filter(designation_id=z.id)
-
-    if request.method == 'POST':
-        sc1 = request.POST['Department']
-        sc2 = request.POST['designation']
-        sc3 = request.POST['projectname']
-        sc4 = request.POST['task']
-        sc7 = request.POST['discrip']
-        sc5 = request.POST['start']
-        sc6 = request.POST['end']
-        ogo = request.FILES['img[]']
-        print(sc4)
-        
-        catry = trainer_task(tasks=sc4,files=ogo,description=sc7,
-                                  startdate=sc5, enddate=sc6,department_id = sc1,designation_id = sc2,user_id = sc3)
-        catry.save()
     cate = category.objects.all()
-    desig = designation.objects.all()
     proj = course.objects.all()
+    desig = designation.objects.all()
     emp = user_registration.objects.all()
+    vars = trainer_task()
+    if request.method == 'POST':
+        a = request.POST['Category']
+        b = category.objects.get(id = a)
+        aa = request.POST['course']
+        bb = course.objects.get(id = aa)
+        aaa = request.POST['designation']
+        bbb = designation.objects.get(id = aaa)
+        aaaa = request.POST['emp']
+        bbbb = user_registration.objects.get(id =aaaa)
+        aaaaa = create_team.objects.get(id =bbbb.team.id)
+        vars.trainer_task_category = b
+        vars.trainer_task_course = bb
+        vars.trainer_task_designation = bbb
+        vars.trainer_task_user = bbbb
+        vars.trainer_task_taskname = request.POST['task']
+        vars.trainer_task_description = request.POST['discrip']
+        vars.trainer_task_startdate = request.POST['start']
+        vars.trainer_task_enddate = request.POST['end']
+        vars.trainer_task_files = request.FILES['file']
+        vars.trainer_task_status = 0
+        vars.trainer_task_team_name = aaaaa
+        vars.save()
+        return render(request,'software_training/training/admin/admin_givetask.html', {'mem': mem,'var':var,'cate':cate,'desig':desig,'proj':proj,'emp':emp,})
+
     return render(request,'software_training/training/admin/admin_givetask.html', {'mem': mem,'var':var,'cate':cate,'desig':desig,'proj':proj,'emp':emp,})
 
-
+@csrf_exempt
 def Admin_taskcategory(request):
     mem = User.objects.all()
     z = designation.objects.get(designation_name='Admin')
@@ -2402,9 +2412,31 @@ def Admin_taskcategory(request):
     Adm = user_registration.objects.filter(id=z.id) 
     dept_id = request.GET.get('dept_id')
     # Desig = designation.objects.filter(department_id=dept_id)
-    Desig = course.objects.all()
-    print("jishnu")
+    Desig = course.objects.filter(course_category = dept_id)
+    print("jishnu") 
+    print(dept_id)
     return render(request,'software_training/training/admin/admin_taskcategory.html', {'Desig': Desig,'Adm':Adm,'mem':mem,'var':var,})
+
+@csrf_exempt
+def Admin_employee(request):
+    mem = User.objects.all()
+    z = designation.objects.get(designation_name='Admin')
+    var = user_registration.objects.filter(designation_id=z.id)  
+
+ 
+    Adm = user_registration.objects.filter(id=z.id) 
+    dept_id = request.GET.get('deptId')
+    courseId = request.GET.get('courseId')
+    desigId = request.GET.get('desigId')
+    # Desig = designation.objects.filter(department_id=dept_id)
+    Desig = user_registration.objects.filter(category = dept_id, course = courseId, designation = desigId)
+    print("jishnu") 
+    print(dept_id)
+    print(courseId)
+    print(desigId)
+    print(Desig)
+    return render(request,'software_training/training/admin/admin_employee.html', {'Desig': Desig,'Adm':Adm,'mem':mem,'var':var,})
+
 
 def Admin_current_task(request):
     mem = User.objects.all()

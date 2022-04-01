@@ -456,6 +456,9 @@ urlpatterns = [
    path('imagechange/<int:id>/', training_views.imagechange, name='imagechange'),
    path('Admin_changepassword/', training_views.Admin_changepassword, name='Admin_changepassword'),
    path('Admin_logout', training_views.Admin_logout, name='Admin_logout'),
+   path('Admin_employee', training_views.Admin_employee, name='Admin_employee'),
+
+
 
     #******************************Accounts****************************
 

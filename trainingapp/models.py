@@ -130,8 +130,8 @@ class trainer_task(models.Model):
                              related_name='taskcategory', null=True, blank=True)
     trainer_task_course=models.ForeignKey(course, on_delete=models.SET_NULL,
                              related_name='taskcourse', null=True, blank=True)
-    #designation=models.ForeignKey(designation, on_delete=models.SET_NULL,
-                             #related_name='taskdesignation', null=True, blank=True)
+    trainer_task_designation=models.ForeignKey(designation, on_delete=models.SET_NULL,
+                             related_name='taskdesignation', null=True, blank=True)
     trainer_task_taskname = models.CharField(max_length=240)
     trainer_task_startdate = models.DateField(
         auto_now_add=False, auto_now=False,  null=True, blank=True)
